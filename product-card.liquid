@@ -1,0 +1,19 @@
+<div class="productCard-info bg-gray-200 relarive overflow-hidden rounded-lg">
+                    <a href="{{ productCard.url }}">
+                        <img src="{{ productCard.featured_image | img_url: 'master' }}" alt="{{ productCard.url }}" class="w-full rounded-lg">
+                        
+                    </a>
+                    <div class="relative w-[200px] bg-white shadow-lg px-3 py-2 rounded-full -top-4 mx-auto">
+                    <div class="flex gap-3 items-center justify-end">
+                        {% if productCard.compare_at_price %}
+                            <h5 class="text-red-600 text-sm line-through">{{productCard.compare_at_price | money}}</h5>
+                            <h4 class="text-lg">{{productCard.price | money}}</h4>
+                        {% else %}    
+                            <h4 class="text-lg">{{productCard.price | money}}</h4>
+                        {% endif %}
+                        </div>
+                    </div>
+                    <div class="pb-6 pt-2 px-2 text-center">
+                        <a href="{{ productCard.url }}"><h2>{{ productCard.title}}</h2></a>
+                    </div>
+                </div>

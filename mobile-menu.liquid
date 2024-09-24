@@ -1,0 +1,64 @@
+<div class="fixed inset-0 overflow-hidden z-20"
+        x-data="{ showMenu: false }"
+        x-show="showMenu"
+        @toggle-nav.window="showMenu = !showMenu"
+>
+    <div class="absolute inset-0 bg-gray-500 bg-opacity-75" 
+        x-show="showMenu"
+        x-transition.opacity
+        @click="showMenu = false">
+    </div>
+    <div class="fixed inset-y-0 left-0 max-w-full flex w-[350px]"
+        x-show="showMenu"
+        x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+        x-transition:enter-start="-translate-x-full opacity-0"
+        x-transition:enter-end="translate-x-0 opacity-100"
+        x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="-translate-x-full opacity-0"
+    >
+        <div class="bg-white relative w-full">
+            <div class="absolute top-0 -right-1 -mr-8 pt-4 pl-2 flex sm:-mr-10 sm:pl-4  ">
+                <button type="button"  class=" text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white primary-bg w-7 h-7 flex items-center justify-center" @click="showMenu = false"><span class="sr-only">Close panel</span>
+                    {% render 'icon-close' %}
+                </button>
+            </div>
+            
+            <div class="px-5 mt-10">
+                 {% for link in section.settings.menu.links %}
+                         {% if link.links.size > 0 %}
+                            <div x-data="{isOpen:false}">
+                                <div @click="isOpen = !isOpen" class="flex justify-between items-center p-2 bg-gray-200 text-black rounded-sm mb-2 cursor-pointer">
+                                    {{ link.title }}
+                                    {% render 'icon-dropdown' %}
+                                </div>
+
+                                <div x-show="isOpen" x-transition>
+                                    {% for child in link.links %}
+                                        <div x-data="{isSubmenuOpen:false}">
+                                            <a @click="isSubmenuOpen = !isSubmenuOpen" class="flex p-2 bg-gray-200 text-black rounded-sm mb-2 cursor-pointer justify-between items-center">
+                                            {{ child.title }}
+                                                {% if child.links.size > 0 %}
+                                                    {% render 'icon-dropdown' %}
+                                                {% endif %}
+                                            </a>
+                                            <div x-show="isSubmenuOpen" x-transition>
+                                                {% for grandchild in child.links %}
+                                                    <a href="{{ grandchild.url }}" class="flex p-2 bg-gray-200 text-black rounded-sm mb-2 cursor-pointer">{{grandchild.title }}</a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>    
+                                    {% endfor %}
+                                </div>
+                            
+                            </div>    
+                         {% else %}
+                            <a href="{{ link.url }}" class="flex p-2 bg-gray-200 text-black rounded-sm mb-2">{{ link.title }}</a>
+                         {% endif %}
+                 {% endfor %}
+            </div>    
+
+        </div>  
+    </div>  
+
+</div>
