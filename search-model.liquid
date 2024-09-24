@@ -1,0 +1,17 @@
+<div class="bg-black/20 fixed top-0 left-0 w-full h-full flex justify-center z-50"
+
+x-data="{searchModel: false}"
+x-show="searchModel"
+@search-toggle.window = "searchModel = !searchModel"
+>
+        <button class="w-8 h-8 flex justify-center items-center bg-white absolute top-5 right-5" @click="searchModel = false">
+            {% render 'icon-close' %}
+        </button>
+
+        <div class="w-full md:w-1/2 p-5 mt-10" @click.outside="searchModel = false">
+            <form action="">
+                <input type="text" class="border rounded-sm py-3 px-5 w-full border-white bg-transparent text-white">
+            </form>
+        </div>
+
+</div>
