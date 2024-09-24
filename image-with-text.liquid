@@ -1,0 +1,262 @@
+<section id="image-with-text-{{ section.id }}" style="background:{{ section.settings.custom_bg_color }};">
+  <div class=" container mx-auto max-w-7xl px-2 md:px-0">
+
+    {% if section.settings.layout == 'left' %}
+
+      <div class="grid md:grid-cols-2 gap-5 md:gap-10 ">
+        <div class=" h-full flex items-center">
+          {% if section.settings.image != blank %}
+            <img
+              src="{{ section.settings.image |  img_url: 'master' }}"
+              alt=""
+              class="m-auto rounded-md">
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+        </div>
+
+        <div class=" h-full flex items-center">
+          <div class="image-with-text__text text-{{ section.settings.text_alignment }}">
+            {% if section.settings.centered_logo == blank %}
+              {% if section.settings.title != blank %}
+                <h2 class="image-text-title-{{section.id}}" style="color:{{ section.settings.text_color }}">{{ section.settings.title | escape }}</h2>
+              {% endif %}
+            {% endif %}
+            {% if section.settings.text != blank %}
+              <p class="pt-2 md:pt-3 text-{{ section.settings.font_size }}" style="color:{{ section.settings.text_color }}">{{ section.settings.text }}</p>
+            {% endif %}
+
+             {% if section.settings.button_label %}
+              <div class="mt-6"></div>
+              <a href="{{ section.settings.btn_url }}" class="{{ section.settings.button_style }}">
+                <span>{{ section.settings.button_label | escape }}</span>
+              </a>
+              
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+
+    {% else %}
+
+      <div class="grid md:grid-cols-2 gap-5 md:gap-10">
+
+        <div class=" h-full flex items-center">
+          <div class="image-with-text__text text-{{ section.settings.text_alignment }}">
+            {% if section.settings.centered_logo == blank %}
+              {% if section.settings.title != blank %}
+                <h2 class="image-text-title-{{section.id}}" style="color:{{ section.settings.text_color }}">{{ section.settings.title }}</h2>
+              {% endif %}
+            {% endif %}
+            {% if section.settings.text != blank %}
+              <p class="pt-2 md:pt-3 text-{{ section.settings.font_size }}" style="color:{{ section.settings.text_color }}">{{ section.settings.text }}</p>
+            {% endif %}
+
+            {% if section.settings.button_label %}
+            <div class="mt-6"></div>
+              <a href="{{ section.settings.btn_url }}" class="{{ section.settings.button_style }}">
+                <span>{{ section.settings.button_label | escape }}</span>
+              </a>
+            {% endif %}
+
+          </div>
+        </div>
+
+        <div class=" h-full flex items-center">
+          {% if section.settings.image != blank %}
+            <img
+              src="{{ section.settings.image |  img_url: 'master' }}"
+              alt=""
+              class="m-auto">
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% style %}
+  .image-text-title-{{section.id}}{
+    font-size: {{ section.settings.font_size_desktop }}px;
+  }
+  #image-with-text-{{ section.id }}{
+    padding-top:{{section.settings.padding_top}}px; 
+    padding-bottom:{{section.settings.padding_bottom}}px
+  }
+  @media only screen and (max-width: 667px) {
+      .image-text-title-{{section.id}}{
+        font-size: {{ section.settings.font_size_mobile }}px;
+      }
+      #image-with-text-{{ section.id }}{
+        padding-top:{{section.settings.padding_top_mobile}}px; 
+        padding-bottom:{{section.settings.padding_bottom_mobile}}px
+      }
+  }
+{% endstyle %}
+
+{% schema %}
+  {
+    "name": "Image with text",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "color",
+        "id": "custom_bg_color",
+        "label": "Section Background Color",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Section Text Color",
+        "default": "#000"
+      },
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Image alignment",
+        "default": "left",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          }, {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Text alignment",
+        "default": "left",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          }, {
+            "value": "center",
+            "label": "Center"
+          }, {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }, {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Image with text"
+      }, 
+      {
+         "type": "range",
+            "id": "font_size_desktop",
+            "label": "Title Font Size Desktop",
+            "min": 16,
+            "max": 60,
+            "step": 1,
+            "unit": "px",
+            "default": 20
+        },
+        {
+            "type": "range",
+            "id": "font_size_mobile",
+            "label": "Title Font Size Mobile",
+            "min": 10,
+            "max": 50,
+            "step": 1,
+            "unit": "px",
+            "default": 18
+        },
+      {
+        "type": "textarea",
+        "id": "text",
+        "label": "Text",
+        "default": "Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review."
+      }, {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button Text",
+        "default": "Read More"
+      }, {
+        "type": "url",
+        "id": "btn_url",
+        "label": "Button Link"
+      },
+      {
+            "type": "select",
+            "id": "button_style",
+            "options": [
+              {
+                "value": "primary_button",
+                "label": "Primary Button"
+              }, 
+              {
+                "value": "secondary_button",
+                "label": "Secondary Button"
+              }
+            ],
+            "default": "primary_button",
+            "label": "Primary Button"
+          },
+      {
+        "type": "header",
+        "content": "Desktop Padding"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding Top",
+        "min": 0,
+        "max": 150,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      }, {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding Bottom",
+        "min": 0,
+        "max": 150,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      },
+      {
+        "type": "header",
+        "content": "Mobile Padding"
+      } , 
+      {
+        "type": "range",
+        "id": "padding_top_mobile",
+        "label": "Padding Top",
+        "min": 0,
+        "max": 150,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      }, {
+        "type": "range",
+        "id": "padding_bottom_mobile",
+        "label": "Padding Bottom",
+        "min": 0,
+        "max": 150,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      }
+    ],
+    "presets": [
+      {
+        "name": "Image with text",
+        "category": "Image"
+      }
+    ]
+  }
+{% endschema %}

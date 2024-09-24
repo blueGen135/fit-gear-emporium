@@ -1,0 +1,214 @@
+<div id="icon-with-text-{{ section.id }}" style="background-color: {{ section.settings.custom_bg_color }};">
+  <div id="bgc__video--container" class="relative max-w-7xl	mx-auto px-2 md:px-0 text-center">
+    {% if section.settings.title != blank %}
+      <h2 class="py-2" id="title_{{ section.id }}" style="color:{{ section.settings.text_color }}">
+        {{ section.settings.title }}
+      </h2>
+    {% endif %}
+    {% if section.settings.description %}
+      <p class="max-w-2xl mx-auto text-center py-2 text-sm md:text-base">{{ section.settings.description }}</p>
+    {% endif %}
+    <div class="flex flex-wrap py-2">
+      {% for block in section.blocks %}
+        <div class="w-1/2 md:w-1/4 p-3">
+          {% if block.settings.icon != blank %}
+          <div class="w-[150px] h-[150px] flex justify-center items-end rounded-full p-5 mx-auto mb-2" style="background-color:{{ section.settings.icon_bg_color }}">
+            <img
+              src="{{ block.settings.icon | img_url: 'master' }}"
+              alt="{{ block.settings.icon.alt }}"
+              class="w-20 md:w-24 mx-auto py-2">
+          </div>
+          {% endif %}
+          {% if block.settings.heading != blank %}
+            <h6 class="text-center text-base py-2">{{ block.settings.heading }}</h6>
+          {% endif %}
+          <p class="py-2 text-sm">{{ block.settings.icon_text }}</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="flex mt-2 mb-2  justify-center">
+        <a href="{{ section.settings.btn_link }}" class="{{ section.settings.button_style }}">
+          {{- section.settings.button_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% style %}
+  #title_{{ section.id }}{
+    font-size: {{ section.settings.font_size_desktop }}px;
+  }
+  #icon-with-text-{{ section.id }}{
+    padding-top:{{section.settings.padding_top}}px; 
+    padding-bottom:{{section.settings.padding_bottom}}px
+  }
+  @media only screen and (max-width: 667px) {
+      #title_{{ section.id }}{
+        font-size: {{ section.settings.font_size_mobile }}px;
+      }
+      #icon-with-text-{{ section.id }}{
+        padding-top:{{section.settings.padding_top_mobile}}px; 
+        padding-bottom:{{section.settings.padding_bottom_mobile}}px
+      }
+  }
+{% endstyle %}
+
+{%- schema -%}
+  {
+    "name": "t:sections.icon-with-text.name",
+    "max_blocks": 4,
+    "settings": [
+      {
+        "type": "color",
+        "id": "custom_bg_color",
+        "label": "t:sections.icon-with-text.settings.custom_bg_color.label",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "t:sections.icon-with-text.settings.text_color.label",
+        "default": "#000"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "t:sections.icon-with-text.settings.title.label"
+      },
+      {
+         "type": "range",
+            "id": "font_size_desktop",
+            "label": "Title Font Size Desktop",
+            "min": 16,
+            "max": 60,
+            "step": 1,
+            "unit": "px",
+            "default": 20
+        },
+        {
+            "type": "range",
+            "id": "font_size_mobile",
+            "label": "Title Font Size Mobile",
+            "min": 10,
+            "max": 50,
+            "step": 1,
+            "unit": "px",
+            "default": 18
+        },
+      {
+        "type": "textarea",
+        "id": "description",
+        "label": "t:sections.icon-with-text.settings.description.label"
+      }, {
+        "type": "text",
+        "id": "button_label",
+        "label": "t:sections.icon-with-text.settings.button_label.label",
+        "info": "t:sections.icon-with-text.settings.button_label.info"
+      }, {
+        "type": "url",
+        "id": "btn_link",
+        "label": "t:sections.icon-with-text.settings.btn_link.label"
+      }, 
+      {
+            "type": "select",
+            "id": "button_style",
+            "options": [
+              {
+                "value": "primary_button",
+                "label": "Primary Button"
+              }, 
+              {
+                "value": "secondary_button",
+                "label": "Secondary Button"
+              }
+            ],
+            "default": "primary_button",
+            "label": "Primary Button"
+          },
+          {
+        "type": "color",
+        "id": "icon_bg_color",
+        "label": "Icon Background Color",
+        "default": "#fff"
+      },
+      {
+        "type": "header",
+        "content": "Desktop Padding"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding Top",
+        "min": 0,
+        "max": 150,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      }, {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding Bottom",
+        "min": 0,
+        "max": 150,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      },
+      {
+        "type": "header",
+        "content": "Mobile Padding"
+      } , 
+      {
+        "type": "range",
+        "id": "padding_top_mobile",
+        "label": "Padding Top",
+        "min": 0,
+        "max": 150,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      }, {
+        "type": "range",
+        "id": "padding_bottom_mobile",
+        "label": "Padding Bottom",
+        "min": 0,
+        "max": 150,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      }
+    ],
+    "blocks": [
+      {
+        "type": "Content",
+        "name": "t:sections.icon-with-text.blocks.content.name",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "icon",
+            "label": "t:sections.icon-with-text.blocks.content.settings.icon.name",
+            "info": "Recommended size 150px x 150px"
+          }, {
+            "type": "text",
+            "id": "heading",
+            "label": "t:sections.icon-with-text.blocks.content.settings.heading.name"
+          }, {
+            "type": "textarea",
+            "id": "icon_text",
+            "label": "t:sections.icon-with-text.blocks.content.settings.icon_text.name"
+          }
+        ]
+
+      }
+
+    ],
+    "presets": [
+      {
+        "name": "t:sections.icon-with-text.presets.name"
+      }
+    ]
+  }
+{%- endschema -%}
