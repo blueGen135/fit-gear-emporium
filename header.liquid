@@ -1,0 +1,103 @@
+<header class="bg-black">
+      <div class="primary-header flex justify-between items-center max-w-7xl mx-auto py-1 md:py-0">
+          <div class="max-w-36 w-full md:max-w-64 pl-3">
+              <a href="/" class="hidden md:flex items-center">
+                {% if settings.logo != blank %}
+                      <img src="{{ settings.logo | img_url: 'master' }}" alt="{{ shop.name }}" style="width:{{settings.logo_width}}px">
+                {% else %}
+                  <h1 class="text-lg font-bold text-white">{{ shop.name }}</h1>  
+                {% endif %}
+              </a>
+
+              <button tyepe="button"  @click="$dispatch('toggle-nav')"  class="flex md:hidden border border-white rounded-sm w-10 h-10 justify-center items-center" >
+                {% render 'icon-mobile-logo' %}
+              </button>
+          </div>
+
+          <nav class="navbar">
+          <div class="flex md:hidden justify-center items-center">
+            <a href="/" class="flex  items-center">
+              {% if settings.logo_mobile != blank %}
+                    <img src="{{ settings.logo_mobile | img_url: 'master' }}" alt="{{ shop.name }}" style="width:55px">
+              {% else %}
+                <h1 class="text-lg font-bold text-white">{{ shop.name }}</h1>  
+              {% endif %}
+            </a>
+          </div>
+            <ul class="primary-navigation hidden md:flex justify-between items-center gap-5">
+                {% for link in section.settings.menu.links %}
+                    {% if link.links.size > 0 %}
+                        <li class="dropdown relative p-5">
+                          <a href="{{ link.url }}" class="text-white">{{ link.title }}</a>
+                          <ul class="absolute min-w-[200px] p-3 bg-black rounded-sm shadow-lg border border-white">
+                            {% for child in link.links %}
+                                <li class="child-dropdown py-2"><a href="{{ child.url }}" class="text-white">{{child.title}}</a>
+                                  {% if child.links.size > 0 %}
+                                    <ul class="absolute min-w-[200px] p-3 bg-black rounded-sm shadow-lg border border-white">
+                                    {% for grandchild in child.links %}
+                                        <li class="py-2"><a href="{{ grandchild.ulr }}" class="text-white">{{grandchild.title}}</a></li>
+                                    {% endfor %}
+                                    </ul>
+                                  {% endif %}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </li>
+                    {% else %}  
+                      <li><a href="{{ link.url }}" class="text-white">{{ link.title }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+          </nav>
+
+          <div class="max-w-36 w-full md:max-w-64 pr-3">
+              <ul class="flex justify-end gap-3">
+                <li>
+                  <button type="button" @click="$dispatch('search-toggle')">
+                    {% render 'icon-search' %}
+                  </button>
+
+                </li>
+                {% if customer %}
+                <li>
+                  <a href="/account">{% render 'icon-user' %}</a>
+                </li>
+                {% else %}  
+                <li>
+                  <a href="/account/login">{% render 'icon-user' %}</a>
+                </li>
+                {% endif %}
+                <li>
+                  <button type="button" class="relative" @click="$dispatch('cart-drawer')">
+                    {% render 'icon-cart' %}
+                    <small id="cart_item_count" class="text-white absolute -top-4">{{cart.item_count}}</small>
+                  </button>
+                </li>
+              </ul>
+          </div>
+      </div>
+</header>
+  {% render 'mini-cart' %}
+  {% render 'search-model' %}
+  {% render 'mobile-menu' %}
+
+
+<style>
+.primary-navigation .dropdown ul {z-index: 99;transition: 0.4s; top:100px;left:10px;opacity: 0;visibility: hidden}
+.primary-navigation .dropdown:hover>ul {opacity: 1;top: 54px;visibility: visible;}
+.primary-navigation .child-dropdown ul {left: calc(100% - 30px);z-index: 99;opacity: 0;visibility: hidden;transition: 0.4s;top:0}
+.primary-navigation .child-dropdown:hover>ul {opacity: 1;top: 0;left: 100%;visibility: visible;}
+</style>
+ {% schema %}
+    {
+      "name": "Header",
+      "settings": [
+        {
+        "type": "link_list",
+        "id": "menu",
+        "default": "main-menu",
+        "label": "Choose Menu"
+        }
+      ]
+}
+  {% endschema %}

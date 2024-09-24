@@ -1,0 +1,192 @@
+{%- style -%}
+#desktop-{{ section.id }}{
+    background-image: url({{ section.settings.desktop_banner | img_url: 'master' }});
+    height: {{ section.settings.desktop_banner_size}}vh;
+}
+
+#mobile-{{ section.id }}{
+    background-image: url({{ section.settings.mobile_banner | img_url: 'master' }});
+    height: 80vh;
+}
+#title-{{ section.id }}{
+    font-size:{{ section.settings.font_size}}px;
+    line-height:{{ section.settings.font_size}}px;
+    color:{{ section.settings.text_color}}
+}
+#image-banner-{{ section.id }} h4{
+    color:{{ section.settings.text_color}}
+}
+
+@media only screen and (max-width:768px){
+
+#title-{{ section.id }}{font-size:24px;line-height: 25px;}
+
+}
+{%- endstyle -%}
+
+<div id="image-banner-{{ section.id }}">
+<div class="relative">
+
+    <div class="hidden md:block">
+        {% if section.settings.desktop_banner != blank %}
+            <div id="desktop-{{ section.id }}" class="bg-cover bg-center"></div>
+        {% else %}    
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+    </div>
+
+    <div class="block md:hidden">
+        {% if section.settings.mobile_banner != blank %}
+            <div id="mobile-{{ section.id }}" class="bg-cover bg-center"></div>
+        {% else %}    
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+    </div>
+
+
+    {% if section.settings.overlay %}
+        <div class="absolute top-0 left-0 bg-black h-full w-full bg-opacity-50"></div>
+    {% endif %}
+    
+
+    <div class="absolute left-0 top-0 w-full h-full flex justify-center items-end">
+            <div class=" p-5 max-w-5xl w-full text-center bg-white/30">
+                {% if section.settings.title != blank %}
+                    <h1 class="pb-2 font-semibold" id="title-{{ section.id }}"> {{ section.settings.title }} </h1>
+                {% endif %}
+
+                {% if section.settings.subtitle != blank %}
+                    <h4 class="pb-2 tex-sm md:{{ section.settings.subtitle_size }} leading-5"> {{ section.settings.subtitle }} </h4>
+                {% endif %}
+
+                {% if section.settings.button_text != blank %}
+                <div class="flex mt-2">
+                    <a href="{{ section.settings.button_link }}"  class="flex justify-center items-center w-40 mx-auto p-2 {{ section.settings.button_style }} text-white font-semibold ">{{ section.settings.button_text }}</a>
+                    </div>
+                {% endif %}
+
+            </div>
+    </div>
+</div>
+</div>
+
+
+{% schema %}
+    {
+        "name": "Image Banner",
+        "settings":[
+            {
+                "type": "image_picker",
+                "id": "desktop_banner",
+                "label": "Desktop Banner",
+            },
+            {
+                "type": "image_picker",
+                "id":"mobile_banner",
+                "label": "Mobile Banner",
+            },
+            {
+                "type": "select",
+                "id": "desktop_banner_size",
+                "options":[
+                    {
+                        "value": "60",
+                        "label": "60VH"
+                    },
+                    {
+                        "value": "80",
+                        "label": "80VH"
+                    },{
+                        "value": "100",
+                        "label": "100VH"
+                    }
+                ],
+                "default":"100",
+                "label": "Banner Height"
+            },
+
+            {
+                "type": "select",
+                "id": "button_style",
+                "options":[
+                    {
+                        "value": "primary-button",
+                        "label": "Primary Button"
+                    },
+                    {
+                        "value": "secondary-button",
+                        "label": "Secondary Button"
+                    }
+                ],
+                "default":"primary-button",
+                "label": "Button Style"
+            },
+            {
+                "type": "checkbox",
+                "id": "overlay",
+                "label": "Need overlay?",
+                "default": false
+            },
+            {
+                "type": "color",
+                "id": "text_color",
+                "label": "Text Color",
+                "default":"#000000"
+            },
+            {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Your Title Here"
+            },
+            {
+                "type": "range",
+                "id" : "font_size",
+                "min": 18,
+                "max": 40,
+                "step": 2,
+                "default": 20,
+                "unit": "px",
+                "label": "Title font size"
+            },
+            {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Subtitle",
+            "default": "Your Subtitle Here"
+            },
+            {
+                "type": "select",
+                "id": "subtitle_size",
+                "label": "Subtitle font size",
+                "options": [
+                    {
+                        "value": "text-sm",
+                        "label": "Small"
+                    },
+                    {
+                        "value": "text-base",
+                        "label": "Normal"
+                    },
+                    {
+                        "value": "text-lg",
+                        "label": "Large"
+                    }
+                ],
+                "default": "text-base"
+            },
+            {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button Text",
+            "default": "Shop Now"
+            },
+            {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button Link"
+            }
+
+        ]
+    }
+{% endschema %}

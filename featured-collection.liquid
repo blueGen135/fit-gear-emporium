@@ -1,0 +1,194 @@
+{%- style -%}
+#featured-collection-{{ section.id }} {
+    background-color:{{ section.settings.background_color }};
+    padding:{{ section.settings.desktop_padding}}px 0px;
+}
+
+#featured-collection-{{ section.id }} h1{
+    color:{{ section.settings.font_color }};
+    font-size:{{ section.settings.font_size}}px;
+}
+#featured-collection-{{ section.id }} p{
+    color:{{ section.settings.font_color }};
+}
+@media only screen and (max-width:768px){
+  #featured-collection-{{ section.id }} {
+     padding:{{ section.settings.mobile_padding}}px 0px;
+}  
+}
+{%- endstyle -%}
+<div id="featured-collection-{{ section.id }}">
+
+
+    <div class="max-w-7xl mx-auto px-2 md:px-0">
+        {% if section.settings.title !=blank %}
+            <h1 class="pb-2 font-semibold text-center"> {{ section.settings.title }} </h1>
+        {% endif %}
+
+        {% if section.settings.subtitle != blank %}
+            <p class="pb-2 tex-sm md:{{ section.settings.subtitle_size }} leading-5 text-center">{{ section.settings.subtitle}}</p>
+        {% endif %}
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 py-4">
+            {% for product in section.settings.featured_collection.products limit: section.settings.number_of_products_to_show%}
+                {% render 'product-card', productCard: product %}
+            {% endfor %}
+        </div>
+
+        {% if section.settings.featured_collection == blank %}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 py-4">
+              {% for items in (1..4) %}
+                <div class="mb-4 border border-gray-100 shadow-lg rounded-md">
+                    <div>
+                      {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+                  {{ 'product-' | append: current | placeholder_svg_tag }}
+
+                      
+                    </div>
+                    <div class="text-center pb-4">
+                    <p class="font-semibold">Demo Product</p>
+                    <p>{{ 1999 | money}}</p>
+                    </div>
+                </div>
+              {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if section.settings.button_text != blank %}
+                <div class="flex mt-8">
+                    <a href="{{ section.settings.button_link }}"  class="flex justify-center items-center w-40 mx-auto p-2 {{ section.settings.button_style }} text-white font-semibold ">{{ section.settings.button_text }}</a>
+                    </div>
+                {% endif %}
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name": "Featured colelction",
+        "settings":[
+            {
+                "type": "collection",
+                "id": "featured_collection",
+                "label": "Choose Collection"
+            },
+            {
+                "type": "range",
+                "id": "number_of_products_to_show",
+                "min": 4,
+                "max": 20,
+                "default": 4,
+                "label": "Number of products to show",
+            },
+            {
+                "type": "color",
+                "id": "background_color",
+                "label": "Background Color",
+                "default": "#fff"
+            },
+            {
+                "type": "color",
+                "id": "font_color",
+                "label": "Font Color",
+                "default": "#000"
+            },
+            {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Your Title Here"
+            },
+            {
+                "type": "range",
+                "id" : "font_size",
+                "min": 18,
+                "max": 40,
+                "step": 2,
+                "default": 20,
+                "unit": "px",
+                "label": "Title font size"
+            },
+
+            {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Subtitle",
+            "default": "Your Subtitle Here"
+            },
+            {
+                "type": "select",
+                "id": "subtitle_size",
+                "label": "Subtitle font size",
+                "options": [
+                    {
+                        "value": "text-sm",
+                        "label": "Small"
+                    },
+                    {
+                        "value": "text-base",
+                        "label": "Normal"
+                    },
+                    {
+                        "value": "text-lg",
+                        "label": "Large"
+                    }
+                ],
+                "default": "text-base"
+            },
+            {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button Text",
+            "default": "Shop Now"
+            },
+            {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button Link"
+            },
+            {
+                "type": "select",
+                "id": "button_style",
+                "options":[
+                    {
+                        "value": "primary-button",
+                        "label": "Primary Button"
+                    },
+                    {
+                        "value": "secondary-button",
+                        "label": "Secondary Button"
+                    }
+                ],
+                "default":"primary-button",
+                "label": "Button Style"
+            },
+
+            {
+                "type": "range",
+                "id" : "desktop_padding",
+                "min": 10,
+                "max": 100,
+                "step": 2,
+                "default": 10,
+                "unit": "px",
+                "label": "Desktop Padding"
+            },
+
+            {
+                "type": "range",
+                "id" : "mobile_padding",
+                "min": 10,
+                "max": 100,
+                "step": 2,
+                "default": 10,
+                "unit": "px",
+                "label": "Mobile Padding"
+            }
+
+        ],
+        "presets":[
+            {
+                "name": "Featured Colelction"
+            }
+        ]
+    }
+{% endschema %}

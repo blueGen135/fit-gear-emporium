@@ -1,0 +1,174 @@
+{%- style -%}
+#rich-text-section-{{ section.id }} {
+    background-color:{{ section.settings.section_bg_color }};
+    padding:{{ section.settings.desktop_padding}}px 0px;
+}
+
+#rich-text-section-{{ section.id }} h2{
+    color:{{ section.settings.font_color }};
+    font-size:{{ section.settings.font_size}}px;
+}
+#rich-text-section-{{ section.id }} .text-content  p{
+    color:{{ section.settings.font_color }};
+}
+@media only screen and (max-width:768px){
+  #rich-text-section-{{ section.id }} {
+    padding:{{ section.settings.mobile_padding}}px 0px;
+}  
+#rich-text-section-{{ section.id }} h2{
+    font-size:22px;
+}
+}
+{%- endstyle -%}
+  
+  <div id="rich-text-section-{{section.id}}" >
+  <div class="max-w-5xl px-2 lg:px-0 mx-auto" >
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'heading' -%}
+        <h2 class="py-2 text-center" >
+          {{ block.settings.heading | replace: 'p>', 'span>' }}
+        </h2>
+        {%- when 'text' -%}
+        <div class="py-2 text-content text-center" >
+          {{ block.settings.text }}
+        </div>
+        {%- when 'button' -%}
+          {%- if block.settings.button_label != blank -%}
+          <div  class="flex mt-3 py-2 justify-center">
+              <a href="{{ block.settings.button_link }}" class="{{ section.settings.button_style }} tracking-wider min-w-48 justify-center flex p-3 text-white">
+                {{- block.settings.button_label | escape -}}
+              </a>
+          </div>
+          {%- endif -%}
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Rich Text",
+    "tag": "section",
+    "class": "section",
+    "settings": [
+      {
+        "type": "color",
+        "id": "section_bg_color",
+        "label": "Background Color",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "font_color",
+        "label": "Font Color",
+      "default": "#000"
+    },
+    {
+                "type": "range",
+                "id" : "font_size",
+                "min": 18,
+                "max": 40,
+                "step": 2,
+                "default": 20,
+                "unit": "px",
+                "label": "Title font size"
+            },
+
+            {
+                "type": "select",
+                "id": "button_style",
+                "options":[
+                    {
+                        "value": "primary-button",
+                        "label": "Primary Button"
+                    },
+                    {
+                        "value": "secondary-button",
+                        "label": "Secondary Button"
+                    }
+                ],
+                "default":"primary-button",
+                "label": "Button Style"
+            },
+            {
+                "type": "range",
+                "id" : "desktop_padding",
+                "min": 10,
+                "max": 100,
+                "step": 2,
+                "default": 10,
+                "unit": "px",
+                "label": "Desktop Padding"
+            },
+
+            {
+                "type": "range",
+                "id" : "mobile_padding",
+                "min": 10,
+                "max": 100,
+                "step": 2,
+                "default": 10,
+                "unit": "px",
+                "label": "Mobile Padding"
+            }
+
+    ],
+    "blocks": [
+      {
+        "type": "heading",
+        "name": "heading",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "default": "Talk about your brand",
+            "label": "Title"
+          }
+        ]
+      }, {
+        "type": "text",
+        "name": "text",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "text",
+            "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+            "label": "text"
+          }
+        ]
+      }, {
+        "type": "button",
+        "name": "button",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "button_label",
+            "default": "Button label",
+            "label": "Button Label"
+          }, {
+            "type": "url",
+            "id": "button_link",
+            "label": "URL"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Rich Text",
+        "blocks": [
+          {
+            "type": "heading"
+          }, {
+            "type": "text"
+          }, {
+            "type": "button"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

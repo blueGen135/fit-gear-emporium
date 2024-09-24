@@ -1,0 +1,324 @@
+{%- style -%}
+#footer{
+    padding:{{section.settings.desktop_padding}}px 0px; 
+    background-color: {{ section.settings.footer_bg_color }}
+}
+.fontColor{
+  color:{{ section.settings.font_color}}
+}
+
+li.list__item a svg {width: 20px;height: 20px;}
+li.list__item a svg path {fill: #fff;}
+.list__item{border:1px solid var(--primary_color);background:var(--primary_color); transition:all 0.3s ease-in}
+.list__item:hover{background:var(--secondary_color)}
+
+@media only screen and (max-width:786px){
+  #footer{
+    padding:{{section.settings.mobile_padding}}px; 
+  }
+}
+{%- endstyle -%}
+
+<footer id="footer">
+    {% if section.blocks.size > 0 %}
+      <div class="max-w-7xl mx-auto px-3 md:px-2 lg:px-0">
+        {%- liquid
+          if section.blocks.size == 2
+            assign footer_grid_class = 'lg:grid-cols-2'
+          elsif section.blocks.size == 3
+            assign footer_grid_class = 'lg:grid-cols-3'
+          elsif section.blocks.size == 4
+            assign footer_grid_class = 'lg:grid-cols-4'
+          endif
+        -%}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 {{ footer_grid_class }}">
+          {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'link_list' -%}
+                <div class="p-2">
+                  {% if block.settings.heading != blank %}
+                    <h2 class="fontColor text-lg lg:text-xl">{{ block.settings.heading }}</h2>
+                  {% endif %}
+                  <ul>
+                    {%- for link in block.settings.footer_nav.links -%}
+                        <li><a href="{{ link.url }}" class="fontColor text-sm flex py-2"> {{ link.title }} </a></li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+                {%- when 'image' -%}
+                <div class="p-2 text-center">
+                  {% if block.settings.image != blank %}
+                    <img class="mx-auto" src="{{ block.settings.image | img_url: 'master' }}" alt="" style="width:{{ block.settings.image_width  }}px">
+                  {% endif %}
+                  {% if block.settings.store_description %}
+                    <div class="fontColor text-sm ">
+                      {{ block.settings.store_description  }}
+                    </div>
+                  {% endif %}
+                </div>
+
+                {%- when 'checkbox' -%}
+                    <div class="p-2">
+                      {% if block.settings.newsletter_heading %}
+                          <h2 class="fontColor text-lg lg:text-xl">{{ block.settings.newsletter_heading }}</h2>
+                      {% endif %}
+                      <div>
+                      {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form pt-3' -%}
+                        <input type="hidden"  name="contact[tags]" value="newsletter">
+                          <input type="hidden" name="form_type" value="customer" />
+                          <input type="hidden" name="utf8" value="✓" />
+                        <div class="newsletter-form__field-wrapper">
+                          <div class="flex gap-1">
+                            <input
+                              id="NewsletterForm--{{ section.id }}"
+                              type="email"
+                              name="contact[email]"
+                              class="border p-2 rounded-sm w-4/5 focus:border-white outline-none focus:ring-0 bg-transparent"
+                              value="{{ form.email }}"
+                              aria-required="true"
+                              autocorrect="off"
+                              autocapitalize="off"
+                              autocomplete="email"
+                              {% if form.errors %}autofocusaria-invalid="true"aria-describedby="ContactFooter-error"{% elsif form.posted_successfully? %}aria-describedby="ContactFooter-success"{% endif %}placeholder="{{ 'newsletter.label' | t }}" required>
+
+                            <button
+                              type="submit"
+                              class="py-3 w-1/5 flex justify-center primary-button rounded-sm items-center"
+                              name="commit"
+                              id="Subscribe"
+                              aria-label="{{ 'newsletter.button_label' | t }}">
+                              {% render 'icon-arrow' %}
+                            </button>
+                          </div>
+                          {%- if form.errors -%}
+                            <small class="newsletter-form__message form__message" id="ContactFooter-error">{% render 'icon-error' %}{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</small>
+                          {%- endif -%}
+                        </div>
+                        {%- if form.posted_successfully? -%}
+                          <h3
+                            class="newsletter-form__message newsletter-form__message--success form__message"
+                            id="ContactFooter-success"
+                            tabindex="-1"
+                            autofocus>{% render 'icon-success' %}{{ 'newsletter.success' | t }}</h3>
+                        {%- endif -%}
+                      {%- endform -%}
+                      </div>
+                    </div>
+              {%- endcase -%}
+          {%- endfor -%}
+        
+        </div>
+
+
+      </div>
+    {% endif %}
+
+    {% if section.settings.show_social %}
+        <div class="max-w-7xl mx-auto px-3 md:px-2 lg:px-0">
+          <ul class="social-media flex flex-wrap gap-4 justify-center items-center">
+              {%- if settings.social_twitter_link != blank -%}
+                  <li class="list__item  rounded-sm h-10 w-10 flex justify-center items-center">
+                    <a href="{{ settings.social_twitter_link }}" class="link list-social__link">
+                      {%- render 'icon-twitter' -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_facebook_link != blank -%}
+                  <li class="list__item  rounded-sm h-10 w-10 flex justify-center items-center">
+                    <a href="{{ settings.social_facebook_link }}" class="link list-social__link">
+                      {%- render 'icon-facebook' -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_pinterest_link != blank -%}
+                  <li class="list__item  rounded-sm h-10 w-10 flex justify-center items-center">
+                    <a href="{{ settings.social_pinterest_link }}" class="link list-social__link">
+                      {%- render 'icon-pinterest' -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_instagram_link != blank -%}
+                  <li class="list__item  rounded-sm h-10 w-10 flex justify-center items-center">
+                    <a href="{{ settings.social_instagram_link }}" class="link list-social__link">
+                      {%- render 'icon-instagram' -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_tiktok_link != blank -%}
+                  <li class="list__item  rounded-sm h-10 w-10 flex justify-center items-center">
+                    <a href="{{ settings.social_tiktok_link }}" class="link list-social__link">
+                      {%- render 'icon-tiktok' -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_tumblr_link != blank -%}
+                  <li class="list__item  rounded-sm h-10 w-10 flex justify-center items-center">
+                    <a href="{{ settings.social_tumblr_link }}" class="link list-social__link">
+                      {%- render 'icon-tumblr' -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_snapchat_link != blank -%}
+                  <li class="list__item  rounded-sm h-10 w-10 flex justify-center items-center">
+                    <a href="{{ settings.social_snapchat_link }}" class="link list-social__link">
+                      {%- render 'icon-snapchat' -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_youtube_link != blank -%}
+                  <li class="list__item  rounded-sm h-10 w-10 flex justify-center items-center">
+                    <a href="{{ settings.social_youtube_link }}" class="link list-social__link">
+                      {%- render 'icon-youtube' -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_vimeo_link != blank -%}
+                  <li class="list__item  rounded-sm h-10 w-10 flex justify-center items-center">
+                    <a href="{{ settings.social_vimeo_link }}" class="link list-social__link">
+                      {%- render 'icon-vimeo' -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+          </ul>
+        </div>
+    {% endif %}
+</footer>
+
+ {% if section.settings.show_copyright_text %}
+<div class="bg-gray-200 py-4">
+  <div class="max-w-7xl mx-auto">
+          {% if section.settings.copyright_text != blank %}
+            <div class="footer__copyright text-center py-3">
+              <p class="text-sm"><span>&copy; {{ 'now' | date: "%Y" }}</span> <span>{{ section.settings.copyright_text }}</span></p>
+            </div>
+          {% else %}   
+                <div class="footer__copyright text-center py-3">
+                <small class="">&copy; {{ 'now' | date: "%Y" }}, {{ shop.name | link_to: routes.root_url }}</small>
+                <small class="">{{ powered_by_link }}</small>
+              </div> 
+          {% endif %}
+  </div>        
+</div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Footer",
+    "settings": [
+      {
+        "type": "color",
+        "id": "footer_bg_color",
+        "label": "Background Color",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "font_color",
+        "label": "Font Color",
+        "default": "#fff"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social",
+        "default": false,
+        "label": "Enable Social Media Icons?"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_copyright_text",
+        "label": "Enable copyright text?",
+        "default": true
+      },
+      {
+        "type": "textarea",
+        "id": "copyright_text",
+        "label": "Enable copyright"
+      },
+      {
+        "type": "range",
+        "id" : "desktop_padding",
+        "min": 10,
+        "max": 100,
+        "step": 2,
+        "default": 10,
+        "unit": "px",
+        "label": "Desktop Padding"
+      },
+
+      {
+          "type": "range",
+          "id" : "mobile_padding",
+          "min": 10,
+          "max": 100,
+          "step": 2,
+          "default": 10,
+          "unit": "px",
+          "label": "Mobile Padding"
+      }
+    ],
+    "blocks": [
+      {
+          "type": "link_list",
+          "name": "Navigation",
+          "limit": 3,
+          "settings": [
+            {
+              "type": "text",
+              "id": "heading",
+              "label": "Heading",
+              "default": "Quick Links"
+            },
+            {
+              "type": "link_list",
+              "id" :"footer_nav",
+              "label": "Choose Navigation",
+              "default": "footer"
+            }
+          ]
+      },
+      {
+        "type": "image",
+        "name": "Iamge",
+        "limit": 1,
+        "settings": [
+            {
+              "type": "image_picker",
+              "id": "image",
+              "label": "Choose Image"
+            },
+            {
+            "type": "richtext",
+            "id": "store_description",
+            "default": "<p>Share contact information, store details, and brand content with your customers.</p>",
+            "label": "Store Description"
+          }, 
+          {
+            "type": "range",
+            "id": "image_width",
+            "min": 50,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "label": "Image width",
+            "default": 100
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "name": "Newsletter",
+        "limit": 1,
+        "settings":[
+          {
+            "type": "text",
+            "id": "newsletter_heading",
+            "default": "Subscribe to our emails",
+            "label": "Title"
+          }
+        ]
+      }
+
+    ]
+  }
+{% endschema %}
